@@ -7,6 +7,8 @@ namespace RepositoryLayer.Interface
 {
     public interface IUserRL
     {
-        public bool AddUser(UsersModel users);
+        public void AddUser(UsersModel users);
+        public List<UserResponseModel> GetAllUsers();
+
     }
 }
