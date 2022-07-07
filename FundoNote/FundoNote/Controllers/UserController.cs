@@ -45,6 +45,20 @@ namespace FundoNote.Controllers
             }
         }
 
-        
+        [HttpPost("Login")]
+        public IActionResult CheckUser(LoginUserModel user)
+        {
+            try
+            {
+                string result = this.userBL.LoginUser(user);
+                return Ok(new { success = true, Message = "Token Generated successfully", data = result });
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

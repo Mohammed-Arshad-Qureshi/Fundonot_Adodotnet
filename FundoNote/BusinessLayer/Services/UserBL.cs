@@ -26,14 +26,30 @@ namespace BusinessLayer.Services
             }
         }
 
-     
-
         public List<UserResponseModel> GetAllUsers()
         {
-            return this.userRL.GetAllUsers();
-
+            try
+            {
+                return this.userRL.GetAllUsers();
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
-       
+        public string LoginUser(LoginUserModel loginUser)
+        {
+            try
+            {
+                return this.userRL.LoginUser(loginUser);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
     }
 }
