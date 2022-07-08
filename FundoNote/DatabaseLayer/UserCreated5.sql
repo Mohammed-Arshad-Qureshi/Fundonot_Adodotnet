@@ -170,7 +170,7 @@ SELECT
 	ERROR_MESSAGE() AS ErrorMessage;
 END CATCH
 
-exec spForgetPasswordUser 'Pavan@gmail.com'
+exec spForgetPasswordUser 'arshad@gmail.com'
 
 
 
