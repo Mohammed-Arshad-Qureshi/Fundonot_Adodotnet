@@ -26,6 +26,18 @@ namespace BusinessLayer.Services
             }
         }
 
+        public bool ForgetPasswordUser(string email)
+        {
+            try
+            {
+                return this.userRL.ForgetPasswordUser(email);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public List<UserResponseModel> GetAllUsers()
         {
             try
