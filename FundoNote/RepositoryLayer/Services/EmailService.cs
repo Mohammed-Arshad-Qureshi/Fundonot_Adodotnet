@@ -15,7 +15,7 @@ namespace RepositoryLayer.Services
                 client.EnableSsl = true;
                 client.DeliveryMethod = SmtpDeliveryMethod.Network;
                 client.UseDefaultCredentials = true;
-                client.Credentials = new NetworkCredential("testingEmailarshad@gmail.com", "rcwbvvjwpenwmtxb"); //Change to your created email and generated password
+                client.Credentials = new NetworkCredential("testingEmailarshad@gmail.com", "rcwbvvjwpenwmtxb");
                 MailMessage msgObj = new MailMessage();
                 msgObj.To.Add(email);
                 msgObj.IsBodyHtml = true;
