@@ -28,7 +28,7 @@ namespace RepositoryLayer.Services
 
             try
             {
-                using(connection)
+                using (connection)
                 {
                     connection.Open();
                     //Creating a stored Procedure for adding Users into database
@@ -39,16 +39,16 @@ namespace RepositoryLayer.Services
                     com.Parameters.AddWithValue("@Email", users.Email);
                     com.Parameters.AddWithValue("@password", users.Password);
                     var result = com.ExecuteNonQuery();
-                   
+
                 }
-                
+
 
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            
+
         }
 
         public bool ForgetPasswordUser(string email)
@@ -70,6 +70,8 @@ namespace RepositoryLayer.Services
                     {
                         response.UserId = rd["UserId"] == DBNull.Value ? default : rd.GetInt32("UserId");
                         response.Email = rd["Email"] == DBNull.Value ? default : rd.GetString("Email");
+                        response.FirstName = rd["Firstname"] == DBNull.Value ? default : rd.GetString("Firstname");
+
 
                     }
                     MessageQueue messageQueue;
@@ -89,7 +91,7 @@ namespace RepositoryLayer.Services
                     messageQueue.Send(MyMessage);
                     Message msg = messageQueue.Receive();
                     msg.Formatter = new BinaryMessageFormatter();
-                    EmailService.SendEmail(email, msg.Body.ToString());
+                    EmailService.SendEmail(email, msg.Body.ToString(), response.FirstName);
                     messageQueue.ReceiveCompleted += new ReceiveCompletedEventHandler(msmqQueue_ReceiveCompleted);
 
                     messageQueue.BeginReceive();
@@ -112,12 +114,12 @@ namespace RepositoryLayer.Services
             {
                 MessageQueue queue = (MessageQueue)sender;
                 Message msg = queue.EndReceive(e.AsyncResult);
-                EmailService.SendEmail(e.Message.ToString(), GenerateToken(e.Message.ToString()));
+                EmailService.SendEmail(e.Message.ToString(), GenerateToken(e.Message.ToString()), e.Message.ToString());
                 queue.BeginReceive();
             }
             catch (MessageQueueException ex)
             {
-                if (ex.MessageQueueErrorCode == 
+                if (ex.MessageQueueErrorCode ==
                     MessageQueueErrorCode.AccessDenied)
                 {
                     Console.WriteLine("Access is denied. " +
@@ -137,8 +139,8 @@ namespace RepositoryLayer.Services
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim("email", email)
-                   
+                    new Claim("Email", email)
+
                     }),
                     Expires = DateTime.UtcNow.AddHours(2),
 
@@ -163,7 +165,8 @@ namespace RepositoryLayer.Services
             SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                using (connection) {
+                using (connection)
+                {
                     connection.Open();
                     SqlCommand com = new SqlCommand("spGetAllUser", connection);
                     com.CommandType = CommandType.StoredProcedure;
@@ -184,7 +187,7 @@ namespace RepositoryLayer.Services
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -234,8 +237,8 @@ namespace RepositoryLayer.Services
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim("email", email),
-                    new Claim("userId",userId.ToString())
+                    new Claim("Email", email),
+                    new Claim("UserId",userId.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddHours(2),
 
@@ -253,6 +256,34 @@ namespace RepositoryLayer.Services
             }
         }
 
+        public bool ResetPassoword(string email, PasswordModel modelPassword)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            var result = 0;
 
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    SqlCommand com = new SqlCommand("spResetPassword", connection);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@Email", email);
+                    com.Parameters.AddWithValue("@Password", modelPassword.Password);
+                    if(modelPassword.Password == modelPassword.CPassword)
+                    {
+                        result = com.ExecuteNonQuery();
+                    }
+
+                    if(result > 0)
+                        return true;
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
