@@ -47,12 +47,6 @@ namespace RepositoryLayer.Services
             }
         }
 
-
-
-       
-
-
-
         public async Task<List<NoteResponseModel>> GetAllNotes(int UserId)
         {
             SqlConnection connection = new SqlConnection(connectionString);
@@ -131,6 +125,36 @@ namespace RepositoryLayer.Services
                 throw ex;
             }
         }
+
+        public async Task DeleteNote(int UserId, int NoteId)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            var result = 0;
+            try
+            {
+                using (connection)
+                {
+                    connection.Open();
+                    //Creating a stored Procedure for adding Users into database
+                    SqlCommand com = new SqlCommand("spDeleteNote", connection);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@UserId", UserId);
+                    com.Parameters.AddWithValue("@NoteId", NoteId);
+                    result = await com.ExecuteNonQueryAsync();
+                    if (result <= 0)
+                    {
+                        throw new Exception("Note Does not Exists");
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
     }
 }
 

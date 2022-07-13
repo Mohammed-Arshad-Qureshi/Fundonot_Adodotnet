@@ -87,5 +87,28 @@ namespace FundoNote.Controllers
             }
         }
 
+
+        [Authorize]
+        [HttpDelete("DeleteNote/{id}")]
+        public async Task<IActionResult> DeleteNote(int id)
+        {
+            try
+            {
+                var userId = User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("userId", StringComparison.InvariantCultureIgnoreCase));
+                int UserId = Int32.Parse(userId.Value);
+                await this.noteBL.DeleteNote(UserId, id);
+                return Ok(new { success = true, Message = "Deleted SuccessFully" });
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "Note Does not Exists")
+                {
+                    return this.BadRequest(new { success = false, Message = "Note Does not Exists" });
+
+                }
+                throw ex;
+            }
+        }
+
     }
 }
