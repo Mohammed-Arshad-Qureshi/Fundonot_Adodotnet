@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DatabaseLayer.Note
 {
-    public class NodeResponseModel
+    public class NoteResponseModel
     {
         public int NoteId { get; set; }
         public string Title { get; set; }

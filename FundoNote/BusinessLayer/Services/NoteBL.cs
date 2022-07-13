@@ -28,6 +28,18 @@ namespace BusinessLayer.Services
             }
         }
 
+        public async Task<List<NoteResponseModel>> GetAllNotes(int UserId)
+        {
+            try
+            {
+                return await this.noteRL.GetAllNotes(UserId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task UpdateNote(int UserId, int NoteId, UpdateNoteModel noteModel)
         {
             try

@@ -11,6 +11,7 @@ namespace BusinessLayer.Interface
     {
         Task AddNote(int UserId, NoteModel noteModel);
         Task UpdateNote(int UserId, int NoteId, UpdateNoteModel noteModel);
+        Task<List<NoteResponseModel>> GetAllNotes(int UserId);
 
     }
 }
